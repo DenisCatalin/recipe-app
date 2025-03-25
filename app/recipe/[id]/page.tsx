@@ -156,7 +156,6 @@ export default function RecipeDetail({ params }: { params: Promise<{ id: string 
   const favorites = useAppSelector(state => state.favorites.items);
   const isFavorite = recipe ? favorites.some(item => item.idMeal === recipe.idMeal) : false;
   const { addRecentlyViewed } = useRecentlyViewed();
-  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     const loadRecipe = async () => {
@@ -166,8 +165,6 @@ export default function RecipeDetail({ params }: { params: Promise<{ id: string 
         addRecentlyViewed(id);
       } catch (error) {
         console.error("Error loading recipe:", error);
-      } finally {
-        setIsLoading(false);
       }
     };
 
@@ -206,85 +203,79 @@ export default function RecipeDetail({ params }: { params: Promise<{ id: string 
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.5 }}
     >
-      {isLoading ? (
-        <>
-          <Header>
-            <Title>{recipe.strMeal}</Title>
-            <CategoryBadge>{recipe.strCategory}</CategoryBadge>
-            <FavoriteButton
-              onClick={handleFavoriteClick}
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
-            >
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                width="20"
-                height="20"
-                viewBox="0 0 24 24"
-                fill={isFavorite ? "currentColor" : "none"}
-                stroke="currentColor"
-                strokeWidth="2"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-              >
-                <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z" />
-              </svg>
-              {isFavorite ? "Remove from Favorites" : "Add to Favorites"}
-            </FavoriteButton>
-          </Header>
-
-          <ImageContainer
-            initial={{ opacity: 0, scale: 0.95 }}
-            animate={{ opacity: 1, scale: 1 }}
-            transition={{ duration: 0.5, delay: 0.2 }}
+      <Header>
+        <Title>{recipe.strMeal}</Title>
+        <CategoryBadge>{recipe.strCategory}</CategoryBadge>
+        <FavoriteButton
+          onClick={handleFavoriteClick}
+          whileHover={{ scale: 1.05 }}
+          whileTap={{ scale: 0.95 }}
+        >
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="20"
+            height="20"
+            viewBox="0 0 24 24"
+            fill={isFavorite ? "currentColor" : "none"}
+            stroke="currentColor"
+            strokeWidth="2"
+            strokeLinecap="round"
+            strokeLinejoin="round"
           >
-            <Image
-              src={recipe.strMealThumb}
-              alt={recipe.strMeal}
-              fill
-              style={{ objectFit: "cover" }}
-              sizes="(max-width: 1200px) 100vw, 1200px"
-            />
-          </ImageContainer>
+            <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z" />
+          </svg>
+          {isFavorite ? "Remove from Favorites" : "Add to Favorites"}
+        </FavoriteButton>
+      </Header>
 
-          <ContentGrid>
-            <Section
-              initial={{ opacity: 0, x: -20 }}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ duration: 0.5, delay: 0.3 }}
-            >
-              <SectionTitle>Ingredients</SectionTitle>
-              <IngredientList>
-                {ingredients.map((item, index) => (
-                  <IngredientItem
-                    key={index}
-                    initial={{ opacity: 0, x: -20 }}
-                    animate={{ opacity: 1, x: 0 }}
-                    transition={{ duration: 0.3, delay: index * 0.1 }}
-                  >
-                    {item.ingredient} - {item.measure}
-                  </IngredientItem>
-                ))}
-              </IngredientList>
-            </Section>
+      <ImageContainer
+        initial={{ opacity: 0, scale: 0.95 }}
+        animate={{ opacity: 1, scale: 1 }}
+        transition={{ duration: 0.5, delay: 0.2 }}
+      >
+        <Image
+          src={recipe.strMealThumb}
+          alt={recipe.strMeal}
+          fill
+          style={{ objectFit: "cover" }}
+          sizes="(max-width: 1200px) 100vw, 1200px"
+        />
+      </ImageContainer>
 
-            <Section
-              initial={{ opacity: 0, x: 20 }}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ duration: 0.5, delay: 0.4 }}
-            >
-              <SectionTitle>Instructions</SectionTitle>
-              <Instructions>
-                {recipe.strInstructions.split("\n").map((paragraph, index) => (
-                  <p key={index}>{paragraph}</p>
-                ))}
-              </Instructions>
-            </Section>
-          </ContentGrid>
-        </>
-      ) : (
-        <LoadingSpinner />
-      )}
+      <ContentGrid>
+        <Section
+          initial={{ opacity: 0, x: -20 }}
+          animate={{ opacity: 1, x: 0 }}
+          transition={{ duration: 0.5, delay: 0.3 }}
+        >
+          <SectionTitle>Ingredients</SectionTitle>
+          <IngredientList>
+            {ingredients.map((item, index) => (
+              <IngredientItem
+                key={index}
+                initial={{ opacity: 0, x: -20 }}
+                animate={{ opacity: 1, x: 0 }}
+                transition={{ duration: 0.3, delay: index * 0.1 }}
+              >
+                {item.ingredient} - {item.measure}
+              </IngredientItem>
+            ))}
+          </IngredientList>
+        </Section>
+
+        <Section
+          initial={{ opacity: 0, x: 20 }}
+          animate={{ opacity: 1, x: 0 }}
+          transition={{ duration: 0.5, delay: 0.4 }}
+        >
+          <SectionTitle>Instructions</SectionTitle>
+          <Instructions>
+            {recipe.strInstructions.split("\n").map((paragraph, index) => (
+              <p key={index}>{paragraph}</p>
+            ))}
+          </Instructions>
+        </Section>
+      </ContentGrid>
     </Container>
   );
 }
